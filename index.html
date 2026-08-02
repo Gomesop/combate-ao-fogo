@@ -136,10 +136,16 @@
                         <div class="hud-bar"><div id="focos-fill" class="hud-bar-fill focos"></div></div>
                         <span class="hud-bar-num"><strong id="hud-apagados">0</strong>/<span id="hud-alvo">6</span></span>
                     </div>
+                    <div class="hud-bar-wrap">
+                        <span class="hud-bar-label">🛡️ Controle</span>
+                        <div class="hud-bar"><div id="controle-fill" class="hud-bar-fill controle"></div></div>
+                        <span class="hud-bar-num"><strong id="hud-controle">100</strong>%</span>
+                    </div>
                 </div>
                 <div class="hud-right">
                     <span class="hud-time">⏱️ <strong id="hud-time">45</strong>s</span>
                     <span class="hud-fail" id="hud-fail" title="Três propagações encerram a fase">🔥 Propagações 0/3</span>
+                    <span class="hud-rescaldo hidden" id="hud-rescaldo">RESCALDO</span>
                     <span class="hud-score"><strong id="hud-score">0</strong> pts</span>
                     <button id="btn-sound" class="btn-icon" title="Som">🔊</button>
                 </div>
@@ -231,7 +237,7 @@
                 <div class="brief-stats lose-stats">
                     <div><span id="lose-m1">0/0</span><small>focos apagados</small></div>
                     <div><span id="lose-m2">3/3</span><small>propagações</small></div>
-                    <div><span id="lose-m3">0%</span><small>precisão do jato</small></div>
+                    <div><span id="lose-m3">0%</span><small>controle final</small></div>
                 </div>
                 <button id="btn-retry-phase" class="btn btn-primary btn-lg btn-block">🔁 Repetir esta fase</button>
                 <button id="btn-give-up" class="btn btn-ghost btn-block">Encerrar e ver o resultado</button>
@@ -255,7 +261,7 @@
                 <div class="end-metrics">
                     <div><span id="m-phases">0</span><small>fases vencidas</small></div>
                     <div><span id="m-focos">0</span><small>focos apagados</small></div>
-                    <div><span id="m-precisao">0%</span><small>precisão do jato</small></div>
+                    <div><span id="m-precisao">0%</span><small>controle final</small></div>
                     <div><span id="m-quiz">0%</span><small>acerto nos desafios</small></div>
                 </div>
 

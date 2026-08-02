@@ -25,9 +25,11 @@ const FASES = [
         focosAlvo: 9,          // focos a extinguir para vencer
         intervalo: [2.1, 3.0], // tempo entre surgimentos
         crescimento: 3.4,      // velocidade com que o foco cresce
-        resistencia: 1.00,
+        resistencia: 1.00,     // o fogo cede mais devagar a cada fase
         janela: 9,           // segundos para conter um foco crítico antes de propagar
-        maxFocos: 6,     // o fogo cede mais devagar a cada fase
+        maxFocos: 6,
+        cargaMaxima: 2.0,     // carga de fogo que zera o medidor de controle
+        cargaControlada: 0.55, // carga máxima aceita para dar a área por controlada
         agua: 100,
         consumo: 11,           // por segundo com o jato aberto
         recarga: 9.0,            // por segundo com o jato fechado
@@ -43,9 +45,11 @@ const FASES = [
         focosAlvo: 11,
         intervalo: [1.8, 2.5],
         crescimento: 4.0,
-        resistencia: 1.25,
+        resistencia: 1.25,     // o fogo cede mais devagar a cada fase
         janela: 8,           // segundos para conter um foco crítico antes de propagar
-        maxFocos: 7,   // o fogo cede mais devagar a cada fase
+        maxFocos: 7,
+        cargaMaxima: 2.4,     // carga de fogo que zera o medidor de controle
+        cargaControlada: 0.60, // carga máxima aceita para dar a área por controlada
         agua: 105,
         consumo: 12,
         recarga: 9.0,
@@ -61,9 +65,11 @@ const FASES = [
         focosAlvo: 12,
         intervalo: [1.5, 2.1],
         crescimento: 4.6,
-        resistencia: 1.55,
+        resistencia: 1.55,     // o fogo cede mais devagar a cada fase
         janela: 7,           // segundos para conter um foco crítico antes de propagar
-        maxFocos: 7,   // o fogo cede mais devagar a cada fase
+        maxFocos: 7,
+        cargaMaxima: 2.8,     // carga de fogo que zera o medidor de controle
+        cargaControlada: 0.65, // carga máxima aceita para dar a área por controlada
         agua: 110,
         consumo: 13,
         recarga: 9.5,
@@ -79,9 +85,11 @@ const FASES = [
         focosAlvo: 13,
         intervalo: [1.2, 1.7],
         crescimento: 4.8,
-        resistencia: 1.80,
+        resistencia: 1.80,     // o fogo cede mais devagar a cada fase
         janela: 6,           // segundos para conter um foco crítico antes de propagar
-        maxFocos: 8,   // o fogo cede mais devagar a cada fase
+        maxFocos: 8,
+        cargaMaxima: 3.2,     // carga de fogo que zera o medidor de controle
+        cargaControlada: 0.70, // carga máxima aceita para dar a área por controlada
         agua: 120,
         consumo: 13.5,
         recarga: 10.0,
@@ -97,9 +105,11 @@ const FASES = [
         focosAlvo: 15,
         intervalo: [0.95, 1.30],
         crescimento: 4.6,
-        resistencia: 2.05,
+        resistencia: 2.05,     // o fogo cede mais devagar a cada fase
         janela: 6,           // segundos para conter um foco crítico antes de propagar
-        maxFocos: 8,   // o fogo cede mais devagar a cada fase
+        maxFocos: 8,
+        cargaMaxima: 3.6,     // carga de fogo que zera o medidor de controle
+        cargaControlada: 0.75, // carga máxima aceita para dar a área por controlada
         agua: 130,
         consumo: 14,
         recarga: 10.5,
@@ -112,12 +122,14 @@ const FASES = [
         subtitulo: 'Emergência de grande porte',
         cenario: 'processo',
         duracao: 100,
-        focosAlvo: 17,
+        focosAlvo: 15,
         intervalo: [0.85, 1.15],
         crescimento: 3.8,
-        resistencia: 2.15,
+        resistencia: 2.15,     // o fogo cede mais devagar a cada fase
         janela: 5,           // segundos para conter um foco crítico antes de propagar
-        maxFocos: 9,   // o fogo cede mais devagar a cada fase
+        maxFocos: 9,
+        cargaMaxima: 4.8,     // carga de fogo que zera o medidor de controle
+        cargaControlada: 0.80, // carga máxima aceita para dar a área por controlada
         agua: 150,
         consumo: 13.5,
         recarga: 13.0,

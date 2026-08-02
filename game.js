@@ -53,6 +53,9 @@ class CombateApp {
         this.hudAlvo = document.getElementById('hud-alvo');
         this.hudFail = document.getElementById('hud-fail');
         this.aguaFill = document.getElementById('agua-fill');
+        this.controleFill = document.getElementById('controle-fill');
+        this.hudControle = document.getElementById('hud-controle');
+        this.hudRescaldo = document.getElementById('hud-rescaldo');
         this.focosFill = document.getElementById('focos-fill');
     }
 
@@ -173,7 +176,10 @@ class CombateApp {
             `🚨 <strong>Quando o fogo se espalha:</strong> se um foco cruza a marca vermelha da barra, ` +
             `ele entra em contagem regressiva de <strong>${f.janela || 7} segundos</strong>. ` +
             `Apague-o antes do zero e ele é contido. Se o tempo acabar, conta uma <strong>propagação</strong> — ` +
-            `com <strong>3 propagações</strong> a fase é perdida.`;
+            `com <strong>3 propagações</strong> a fase é perdida.<br>` +
+            `🏁 <strong>Para vencer</strong> não basta apagar os ${f.focosAlvo} focos: ao acabar o tempo a área ` +
+            `precisa estar <strong>controlada</strong> — nenhum foco em contagem regressiva e o medidor ` +
+            `🛡️ Controle no alto. Fogo grande na cena no fim é derrota.`;
         this.tela('briefing');
     }
 
@@ -209,6 +215,10 @@ class CombateApp {
         this.hudApagados.textContent = '0';
         this.hudFail.textContent = '🔥 Propagações 0/3';
         this.hudFail.classList.remove('alerta');
+        this.hudControle.textContent = '100';
+        this.controleFill.style.width = '100%';
+        this.controleFill.classList.remove('atencao', 'critico');
+        this.hudRescaldo.classList.add('hidden');
 
         if (this.engine) this.engine.destruir();
 
@@ -223,6 +233,12 @@ class CombateApp {
                 this.focosFill.style.width = `${Math.min(100, (h.apagados / h.alvo) * 100)}%`;
                 this.hudFail.textContent = `🔥 Propagações ${h.escaparam}/3`;
                 this.hudFail.classList.toggle('alerta', h.escaparam >= 1);
+                // medidor de controle da área: é ele que decide a vitória
+                this.hudControle.textContent = h.controle;
+                this.controleFill.style.width = `${h.controle}%`;
+                this.controleFill.classList.toggle('atencao', h.controle < 60 && h.controle >= 30);
+                this.controleFill.classList.toggle('critico', h.controle < 30);
+                this.hudRescaldo.classList.toggle('hidden', !h.rescaldo);
             },
             onApagou: (b) => this.aviso(`💧 Foco apagado +${b}`, 'ok'),
             onAlerta: (m) => this.aviso(m, 'ruim'),
@@ -260,7 +276,7 @@ class CombateApp {
         this.focosTotal += r.apagados;
         if (r.precisao > 0) this.precisoes.push(r.precisao);
 
-        if (r.motivo === 'perdeu' || r.motivo === 'tempo') {
+        if (r.motivo !== 'completou') {
             this.tocar('derrota');
             this.mostrarDerrota(r);
             return;
@@ -279,21 +295,34 @@ class CombateApp {
 
     mostrarDerrota(r) {
         const f = FASES[this.faseIndex];
-        const porPropagacao = r.motivo === 'perdeu';
+        const ico = { perdeu: '🔥', descontrole: '🚨', tempo: '⏱️' };
+        const titulo = {
+            perdeu: 'O incêndio se alastrou',
+            descontrole: 'Área entregue fora de controle',
+            tempo: 'Tempo esgotado'
+        };
+        const texto = {
+            perdeu:
+                `Três focos ficaram em contagem regressiva até o fim e <strong>propagaram</strong>. ` +
+                `Quando a barra de um foco cruza a marca vermelha, você tem <strong>${f.janela || 7} segundos</strong> ` +
+                `para apagá-lo — se o contador zerar, conta uma propagação. Três encerram a fase.`,
+            descontrole:
+                `O tempo acabou com o fogo ainda alto: o controle da área ficou em <strong>${r.controle || 0}%</strong>. ` +
+                `Não basta apagar a cota de focos — a cena precisa terminar <strong>controlada</strong>, ` +
+                `sem nenhum foco em contagem regressiva e com pouca chama viva.`,
+            tempo:
+                `A área ficou controlada, mas o tempo acabou antes de você fechar a cota: ` +
+                `<strong>${r.apagados} de ${f.focosAlvo}</strong> focos apagados. ` +
+                `Mire na base da chama, onde o jato é cerca de três vezes mais eficaz.`
+        };
 
-        document.getElementById('lose-ico').textContent = porPropagacao ? '🔥' : '⏱️';
-        document.getElementById('lose-title').textContent =
-            porPropagacao ? 'O incêndio se alastrou' : 'Tempo esgotado';
-        document.getElementById('lose-text').innerHTML = porPropagacao
-            ? `Três focos ficaram em contagem regressiva até o fim e <strong>propagaram</strong>. ` +
-              `Quando a barra de um foco cruza a marca vermelha, você tem <strong>${f.janela || 7} segundos</strong> ` +
-              `para apagá-lo — se o contador zerar, conta uma propagação. Três encerram a fase.`
-            : `Os ${f.duracao} segundos acabaram com <strong>${r.apagados} de ${f.focosAlvo}</strong> focos apagados. ` +
-              `Mire na base da chama: lá o jato é cerca de três vezes mais eficaz.`;
+        document.getElementById('lose-ico').textContent = ico[r.motivo] || '⏱️';
+        document.getElementById('lose-title').textContent = titulo[r.motivo] || 'Fase não concluída';
+        document.getElementById('lose-text').innerHTML = texto[r.motivo] || '';
 
         document.getElementById('lose-m1').textContent = `${r.apagados}/${f.focosAlvo}`;
         document.getElementById('lose-m2').textContent = `${r.escaparam || 0}/3`;
-        document.getElementById('lose-m3').textContent = `${r.precisao || 0}%`;
+        document.getElementById('lose-m3').textContent = `${r.controle || 0}%`;
 
         this.tela('lose');
     }

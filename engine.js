@@ -47,7 +47,8 @@ class CombateEngine {
         this.spawnTimer = 0.8;
 
         this.apagados = 0;
-        this.escaparam = 0;      // focos que atingiram o tamanho máximo
+        this.escaparam = 0;      // focos que propagaram
+        this.controleFinal = false;  // true quando a cota caiu e resta só o rescaldo
         this.pontos = 0;
         this.precisaoAcertos = 0;
         this.precisaoTotal = 0;
@@ -162,7 +163,7 @@ class CombateEngine {
 
         // surgimento de focos
         this.spawnTimer -= dt;
-        if (this.spawnTimer <= 0 && this.focos.length < (this.fase.maxFocos || 7)) {
+        if (!this.controleFinal && this.spawnTimer <= 0 && this.focos.length < (this.fase.maxFocos || 7)) {
             this.gerarFoco();
             const [a, b] = this.fase.intervalo;
             this.spawnTimer = a + Math.random() * (b - a);
@@ -279,10 +280,22 @@ class CombateEngine {
         if (this.shake > 0) this.shake -= dt;
         this.calor = Math.max(0, this.calor - dt * 0.02);
 
-        // fim por objetivo ou por tempo
-        if (this.apagados >= this.fase.focosAlvo) { this.finalizar('completou'); return; }
+        /* ---- condição de vitória: cota E área sob controle ----
+           Bater a cota de focos apagados não basta. Se ainda há fogo grande na
+           cena, a área não está controlada e o cenário não pode ser dado como
+           vencido — nem quando o tempo acaba. */
+        const cota = this.apagados >= this.fase.focosAlvo;
+
+        if (cota && !this.controleFinal) {
+            this.controleFinal = true;   // para de surgir fogo novo: agora é rescaldo
+            this.onAlerta('🎯 Cota atingida! Agora controle o que ainda está queimando.');
+        }
+
+        if (cota && this.areaControlada()) { this.finalizar('completou'); return; }
+
         if (this.tempoRestante <= 0) {
-            this.finalizar(this.apagados >= Math.ceil(this.fase.focosAlvo * 0.7) ? 'completou' : 'tempo');
+            // fogo alto no fim é derrota, independentemente de quantos focos caíram
+            this.finalizar(this.areaControlada() ? 'tempo' : 'descontrole');
             return;
         }
 
@@ -293,8 +306,30 @@ class CombateEngine {
             alvo: this.fase.focosAlvo,
             escaparam: this.escaparam,
             pontos: this.pontos,
+            controle: this.controle(),
+            rescaldo: !!this.controleFinal,
             jato: jatoAtivo
         });
+    }
+
+    /* Carga de fogo ativa na cena: soma do tamanho de todos os focos vivos. */
+    cargaFogo() {
+        let s = 0;
+        for (const f of this.focos) if (!f.extinto) s += f.vida;
+        return s;
+    }
+
+    /* 0 a 100 — quanto da área está sob controle. É o número que o jogador vê. */
+    controle() {
+        const limite = this.fase.cargaMaxima || 2.2;
+        const pct = 100 - (this.cargaFogo() / limite) * 100;
+        return Math.max(0, Math.min(100, Math.round(pct)));
+    }
+
+    /* Área controlada = nenhum foco em contagem regressiva e carga baixa. */
+    areaControlada() {
+        if (this.focos.some(f => f.critico && !f.extinto)) return false;
+        return this.cargaFogo() <= (this.fase.cargaControlada || 0.8);
     }
 
     gerarFoco() {
@@ -372,6 +407,8 @@ class CombateEngine {
             pontos: this.pontos,
             apagados: this.apagados,
             escaparam: this.escaparam,
+            controle: this.controle(),
+            carga: +this.cargaFogo().toFixed(2),
             precisao,
             tempoRestante: Math.max(0, Math.round(this.tempoRestante))
         });

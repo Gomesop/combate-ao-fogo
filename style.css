@@ -290,6 +290,15 @@ a { color: var(--agua-dark); text-decoration: none; }
 .hud-bar-fill.agua { background: linear-gradient(90deg, #7dd3fc, var(--agua)); }
 .hud-bar-fill.agua.baixa { background: linear-gradient(90deg, #fca5a5, var(--alerta)); }
 .hud-bar-fill.focos { width: 0%; background: linear-gradient(90deg, #fdba74, var(--ok)); }
+.hud-bar-fill.controle { background: linear-gradient(90deg, #86efac, var(--ok)); }
+.hud-bar-fill.controle.atencao { background: linear-gradient(90deg, #fcd34d, #f59e0b); }
+.hud-bar-fill.controle.critico { background: linear-gradient(90deg, #fca5a5, var(--alerta)); }
+.hud-rescaldo {
+    display: inline-block; margin-left: 0.4rem; padding: 0.12rem 0.5rem; border-radius: 999px;
+    background: #fef3c7; border: 1px solid #fcd34d; color: #92400e;
+    font-family: var(--fh); font-weight: 900; font-size: 0.6rem; letter-spacing: 0.06em;
+}
+.hud-rescaldo.hidden { display: none; }
 .hud-bar-num { font-size: 0.72rem; color: var(--texto-soft); white-space: nowrap; }
 .hud-bar-num strong { font-family: var(--fh); color: var(--texto); }
 
