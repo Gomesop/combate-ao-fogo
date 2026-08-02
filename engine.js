@@ -83,8 +83,18 @@ class CombateEngine {
         if (!this.running) return;
         const dt = Math.min(0.05, (ts - this.ultimoTs) / 1000);
         this.ultimoTs = ts;
-        this.atualizar(dt);
-        this.desenhar();
+        // uma exceção aqui dentro encerraria a cadeia de requestAnimationFrame
+        // e o jogo congelaria de vez: nunca deixe o erro escapar do quadro
+        try {
+            this.atualizar(dt);
+        } catch (e) {
+            console.error('falha ao atualizar o quadro:', e);
+        }
+        try {
+            this.desenhar();
+        } catch (e) {
+            console.error('falha ao desenhar o quadro:', e);
+        }
         requestAnimationFrame((t) => this.loop(t));
     }
 
@@ -158,11 +168,14 @@ class CombateEngine {
             f.t += dt;
             // o raio precisa ser calculado AQUI, não no render: a colisão do jato
             // depende dele e não pode ficar refém da taxa de desenho
-            f.raio = 22 + f.vida * 58;
+            // vida nunca pode ficar negativa: o raio vira negativo junto e
+            // createRadialGradient lança exceção, matando o loop de animação
+            f.vida = Math.max(0, Math.min(1, f.vida));
+            f.raio = Math.max(8, 22 + f.vida * 58);
 
             if (f.apagando > 0) {
                 f.apagando -= dt;
-                f.vida -= dt * 3.4;
+                f.vida = Math.max(0, f.vida - dt * 3.4);
                 if (f.vida <= 0) this.extinguir(f);
                 continue;
             }
@@ -194,7 +207,7 @@ class CombateEngine {
                     // atingir a BASE do foco é muito mais eficiente que molhar as labaredas
                     const naBase = this.mira.y > f.y + f.raio * 0.1;
                     const eficiencia = naBase ? 1 : 0.3;
-                    f.vida -= dt * 0.78 * eficiencia;
+                    f.vida = Math.max(0, f.vida - dt * 0.78 * eficiencia);
                     f.molhado = 0.25;
                     if (Math.random() < 0.6) this.criarVapor(f.x, f.y + f.raio * 0.3);
                     if (f.vida <= 0) this.extinguir(f, naBase);
@@ -525,7 +538,8 @@ class CombateEngine {
 
     /* --- foco de incêndio --- */
     desenharFoco(c, f) {
-        const r = f.raio || (22 + f.vida * 58);   // calculado em atualizar()
+        // nunca deixe chegar em zero ou negativo: os gradientes radiais quebram
+        const r = Math.max(8, f.raio || (22 + f.vida * 58));   // calculado em atualizar()
         const t = f.t;
         const alpha = f.apagando > 0 ? Math.max(0, f.apagando / 0.35) : 1;
 
