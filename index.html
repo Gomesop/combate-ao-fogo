@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Combate ao Fogo | Simulador em 1ª Pessoa — Hora da Segurança</title>
+    <meta name="description" content="Simulador de combate a incêndio em primeira pessoa: controle a mangueira, apague os focos em 6 cenários e responda aos desafios entre as fases. www.horadaseguranca.com">
+    <meta name="theme-color" content="#f0f7fc">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-container">
+            <a class="brand-box" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">
+                <img src="logo.png" alt="Logo Hora da Segurança" class="header-logo">
+                <span class="brand-text">
+                    <span class="brand-title">COMBATE AO FOGO</span>
+                    <span class="brand-tagline">Simulador em 1ª pessoa · Hora da Segurança</span>
+                </span>
+            </a>
+            <a href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer" class="site-link-btn">
+                🌐 www.horadaseguranca.com
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- ============ CADASTRO ============ -->
+        <section id="screen-welcome" class="screen active">
+            <div class="hero-card">
+                <a href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer" class="hero-logo-link">
+                    <img src="logo.png" alt="Logo Oficial Hora da Segurança" class="hero-logo-img">
+                </a>
+
+                <span class="hero-eyebrow">🚿 Simulador interativo</span>
+                <h1 class="hero-title">Combate ao <mark>Fogo</mark></h1>
+                <p class="hero-subtitle">
+                    Você está atrás da mangueira. Controle o jato, atinja a base das chamas e
+                    apague todos os focos antes que saiam de controle — em seis cenários diferentes.
+                </p>
+
+                <div class="how-grid">
+                    <div class="how-card">
+                        <span class="how-ico">🎯</span><strong>Mire na base</strong>
+                        <p>Acertar a base do foco apaga muito mais rápido que molhar as labaredas.</p>
+                    </div>
+                    <div class="how-card">
+                        <span class="how-ico">💧</span><strong>Controle a água</strong>
+                        <p>O jato consome o reservatório. Feche para recarregar.</p>
+                    </div>
+                    <div class="how-card">
+                        <span class="how-ico">⏱️</span><strong>Não deixe crescer</strong>
+                        <p>Três focos fora de controle e a missão é perdida.</p>
+                    </div>
+                    <div class="how-card">
+                        <span class="how-ico">🧠</span><strong>Prove o que sabe</strong>
+                        <p>Entre as fases: arrastar, ligar pontos, V ou F e memória.</p>
+                    </div>
+                </div>
+
+                <div class="controls-hint">
+                    <div class="ch-item"><span class="key">🖱️</span><span>mova para mirar · <strong>segure</strong> para abrir o jato</span></div>
+                    <div class="ch-item"><span class="key">📱</span><span>no celular, arraste o dedo sobre a cena</span></div>
+                    <div class="ch-item"><span class="key">Espaço</span><span>também abre o jato</span></div>
+                </div>
+
+                <form id="form-register" class="setup-box" novalidate>
+                    <h3>📝 Identifique-se para começar</h3>
+                    <div class="input-group">
+                        <label for="reg-name">👤 Nome completo</label>
+                        <input type="text" id="reg-name" placeholder="Ex: Marcos Vinícius Souza" autocomplete="name" maxlength="60">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email">✉️ E-mail</label>
+                        <input type="email" id="reg-email" placeholder="Ex: marcos.souza@empresa.com.br" autocomplete="email" maxlength="100">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-company">🏢 Empresa / instituição</label>
+                        <input type="text" id="reg-company" placeholder="Ex: Brigada Industrial Ltda." autocomplete="organization" maxlength="80">
+                    </div>
+                    <div id="setup-error" class="setup-error hidden"></div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">🚿 Assumir a mangueira</button>
+                    <p class="privacy-note">🔒 Seus dados (nome, e-mail, empresa, data e pontuação) são registrados apenas para controle de participação.</p>
+                </form>
+
+                <a class="marketing-banner" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">
+                    <span>Treinamentos de brigada de incêndio, NRs e SST para a sua empresa</span>
+                    <strong>Acesse www.horadaseguranca.com 🚀</strong>
+                </a>
+            </div>
+        </section>
+
+
+        <!-- ============ BRIEFING ============ -->
+        <section id="screen-briefing" class="screen">
+            <div class="briefing-card">
+                <div class="brief-badge" id="brief-badge">FASE 1 DE 6</div>
+                <div class="brief-ico" id="brief-ico">🍳</div>
+                <h2 class="brief-title" id="brief-title">Cozinha Residencial</h2>
+                <p class="brief-sub" id="brief-sub">Princípio de incêndio em panela</p>
+                <p class="brief-text" id="brief-text"></p>
+                <div class="brief-tip" id="brief-tip"></div>
+                <div class="brief-stats">
+                    <div><span id="brief-alvo">6</span><small>focos a apagar</small></div>
+                    <div><span id="brief-dur">45</span><small>segundos</small></div>
+                    <div><span id="brief-dif">1x</span><small>intensidade</small></div>
+                </div>
+                <button id="btn-start-phase" class="btn btn-primary btn-lg btn-block">▶️ Abrir o hidrante</button>
+            </div>
+        </section>
+
+
+        <!-- ============ JOGO ============ -->
+        <section id="screen-game" class="screen">
+            <div class="game-hud">
+                <div class="hud-left">
+                    <span class="hud-phase" id="hud-phase">Fase 1</span>
+                    <span class="hud-scene" id="hud-scene">Cozinha</span>
+                </div>
+                <div class="hud-center">
+                    <div class="hud-bar-wrap">
+                        <span class="hud-bar-label">💧 Água</span>
+                        <div class="hud-bar"><div id="agua-fill" class="hud-bar-fill agua"></div></div>
+                    </div>
+                    <div class="hud-bar-wrap">
+                        <span class="hud-bar-label">🔥 Focos</span>
+                        <div class="hud-bar"><div id="focos-fill" class="hud-bar-fill focos"></div></div>
+                        <span class="hud-bar-num"><strong id="hud-apagados">0</strong>/<span id="hud-alvo">6</span></span>
+                    </div>
+                </div>
+                <div class="hud-right">
+                    <span class="hud-time">⏱️ <strong id="hud-time">45</strong>s</span>
+                    <span class="hud-fail" id="hud-fail">🔥 0/3</span>
+                    <span class="hud-score"><strong id="hud-score">0</strong> pts</span>
+                    <button id="btn-sound" class="btn-icon" title="Som">🔊</button>
+                </div>
+            </div>
+
+            <div class="stage-wrap">
+                <canvas id="game-canvas" width="900" height="500" aria-label="Cena de combate a incêndio"></canvas>
+                <div id="toast" class="toast hidden"></div>
+                <div id="countdown" class="countdown hidden"></div>
+            </div>
+
+            <p class="stage-help">🖱️ Mova para mirar e <strong>segure o botão</strong> para abrir o jato · 📱 arraste o dedo sobre a cena</p>
+        </section>
+
+
+        <!-- ============ PUBLICIDADE ============ -->
+        <section id="screen-ad" class="screen">
+            <div class="ad-card" id="ad-card">
+                <span class="ad-tag">Espaço publicitário</span>
+                <div class="ad-brand">
+                    <div class="ad-logo" id="ad-logo"></div>
+                    <div class="ad-brand-text">
+                        <strong id="ad-name">ProSeg Soluções</strong>
+                        <span id="ad-segment">Revenda de EPI</span>
+                    </div>
+                </div>
+                <p class="ad-tagline" id="ad-tagline"></p>
+                <p class="ad-claim" id="ad-claim"></p>
+                <div class="ad-chips" id="ad-chips"></div>
+                <a id="ad-cta" class="btn btn-ad" href="anuncie.html" target="_blank" rel="noopener noreferrer">Saiba mais</a>
+                <p class="ad-demo-note" id="ad-demo-note"></p>
+                <div class="ad-footer">
+                    Espaço publicitário distribuído por
+                    <a href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">www.horadaseguranca.com</a>
+                </div>
+                <button id="btn-skip-ad" class="btn btn-ghost btn-block" disabled>Continuar em <span id="ad-count">5</span>s</button>
+            </div>
+        </section>
+
+
+        <!-- ============ DESAFIOS ENTRE FASES ============ -->
+        <section id="screen-quiz" class="screen">
+            <div class="quiz-card">
+                <span class="quiz-badge" id="quiz-badge">Desafio</span>
+                <h2 class="quiz-title" id="quiz-title"></h2>
+                <p class="quiz-text" id="quiz-text"></p>
+
+                <!-- 1) arrastar -->
+                <div id="modo-arrastar" class="modo hidden">
+                    <div class="quiz-pool" id="quiz-pool"></div>
+                    <div class="quiz-targets" id="quiz-targets"></div>
+                </div>
+
+                <!-- 2) ligar pontos -->
+                <div id="modo-ligar" class="modo hidden">
+                    <div class="ligar-wrap">
+                        <svg id="ligar-svg" class="ligar-svg"></svg>
+                        <div class="ligar-col" id="ligar-esq"></div>
+                        <div class="ligar-col" id="ligar-dir"></div>
+                    </div>
+                </div>
+
+                <!-- 3) verdadeiro ou falso -->
+                <div id="modo-vf" class="modo hidden">
+                    <div id="vf-lista" class="vf-lista"></div>
+                </div>
+
+                <!-- 4) memória -->
+                <div id="modo-memoria" class="modo hidden">
+                    <div class="mem-head">
+                        <span class="mem-badge">🃏 Pares: <strong id="mem-pares">0 / 6</strong></span>
+                    </div>
+                    <div id="mem-grid" class="mem-grid"></div>
+                </div>
+
+                <div id="quiz-feedback" class="quiz-feedback hidden"></div>
+                <button id="btn-quiz-next" class="btn btn-primary btn-lg btn-block hidden">Seguir para a próxima fase ➔</button>
+                <p class="quiz-help" id="quiz-help"></p>
+            </div>
+        </section>
+
+
+        <!-- ============ FIM ============ -->
+        <section id="screen-end" class="screen">
+            <div class="end-card">
+                <div class="end-ico" id="end-ico">🏆</div>
+                <h1 class="end-title" id="end-title">Fogo controlado!</h1>
+                <p class="end-sub" id="end-sub"></p>
+
+                <div class="end-score">
+                    <span class="es-label">Pontuação final</span>
+                    <div class="es-value" id="end-score">0</div>
+                    <div class="es-rank" id="end-rank">—</div>
+                </div>
+
+                <div class="end-metrics">
+                    <div><span id="m-phases">0</span><small>fases vencidas</small></div>
+                    <div><span id="m-focos">0</span><small>focos apagados</small></div>
+                    <div><span id="m-precisao">0%</span><small>precisão do jato</small></div>
+                    <div><span id="m-quiz">0%</span><small>acerto nos desafios</small></div>
+                </div>
+
+                <div class="end-actions">
+                    <button id="btn-restart" class="btn btn-primary btn-lg">🔄 Jogar novamente</button>
+                </div>
+
+                <a class="end-cta" href="https://www.horadaseguranca.com" target="_blank" rel="noopener noreferrer">
+                    <img src="logo.png" alt="Hora da Segurança" class="end-cta-logo">
+                    <span>
+                        <strong>Leve o treinamento de brigada para a sua equipe</strong>
+                        Cursos de NRs, combate a incêndio e gestão preventiva — www.horadaseguranca.com ↗
+                    </span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="gameData.js"></script>
+    <script src="audio.js"></script>
+    <script src="sheets.js"></script>
+    <script src="engine.js"></script>
+    <script src="desafios.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
