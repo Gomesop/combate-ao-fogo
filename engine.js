@@ -173,6 +173,15 @@ class CombateEngine {
             f.vida = Math.max(0, Math.min(1, f.vida));
             f.raio = Math.max(8, 22 + f.vida * 58);
 
+            // foco já apagado nunca volta a crescer: a remoção depende de um
+            // setTimeout, que a aba em segundo plano estrangula, e sem isto ele
+            // renasceria e ainda contaria como foco perdido
+            if (f.extinto) {
+                f.apagando -= dt;
+                f.vida = Math.max(0, f.vida - dt * 3.4);
+                continue;
+            }
+
             if (f.apagando > 0) {
                 f.apagando -= dt;
                 f.vida = Math.max(0, f.vida - dt * 3.4);
@@ -192,6 +201,9 @@ class CombateEngine {
                 if (this.escaparam >= 3) { this.finalizar('perdeu'); return; }
             }
         }
+
+        // a limpeza acontece aqui, no relógio do jogo, e não num setTimeout
+        this.focos = this.focos.filter(f => !(f.extinto && f.apagando <= -0.05));
 
         // jato molhando os focos
         if (jatoAtivo) {
@@ -279,7 +291,7 @@ class CombateEngine {
         this.som('apagou');
         for (let i = 0; i < 10; i++) this.criarVapor(f.x, f.y);
         this.onApagou(bonus);
-        setTimeout(() => { this.focos = this.focos.filter(x => x !== f); }, 380);
+        // a remoção do foco é feita em atualizar(), pelo relógio do jogo
     }
 
     criarGotas() {
