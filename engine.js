@@ -156,6 +156,9 @@ class CombateEngine {
         // focos
         for (const f of this.focos) {
             f.t += dt;
+            // o raio precisa ser calculado AQUI, não no render: a colisão do jato
+            // depende dele e não pode ficar refém da taxa de desenho
+            f.raio = 22 + f.vida * 58;
 
             if (f.apagando > 0) {
                 f.apagando -= dt;
@@ -185,13 +188,13 @@ class CombateEngine {
             for (const f of this.focos) {
                 if (f.apagando > 0) continue;
                 const d = Math.hypot(f.x - this.mira.x, f.y - this.mira.y);
-                const raioJato = 54 + f.raio * 0.4;
+                const raioJato = 40 + f.raio * 0.3;
                 if (d < raioJato) {
                     acertou = true;
-                    // atingir a BASE do foco é bem mais eficiente
-                    const naBase = this.mira.y > f.y - f.raio * 0.15;
-                    const eficiencia = naBase ? 1 : 0.42;
-                    f.vida -= dt * 0.62 * eficiencia;
+                    // atingir a BASE do foco é muito mais eficiente que molhar as labaredas
+                    const naBase = this.mira.y > f.y + f.raio * 0.1;
+                    const eficiencia = naBase ? 1 : 0.3;
+                    f.vida -= dt * 0.55 * eficiencia;
                     f.molhado = 0.25;
                     if (Math.random() < 0.6) this.criarVapor(f.x, f.y + f.raio * 0.3);
                     if (f.vida <= 0) this.extinguir(f, naBase);
@@ -522,8 +525,7 @@ class CombateEngine {
 
     /* --- foco de incêndio --- */
     desenharFoco(c, f) {
-        const r = 22 + f.vida * 58;
-        f.raio = r;
+        const r = f.raio || (22 + f.vida * 58);   // calculado em atualizar()
         const t = f.t;
         const alpha = f.apagando > 0 ? Math.max(0, f.apagando / 0.35) : 1;
 
