@@ -4,6 +4,10 @@
  */
 
 class CombateEngine {
+    /* A partir deste tamanho o foco entra em zona crítica: o jogo avisa e o
+       crescimento desacelera, dando uma janela clara antes da propagação. */
+    static LIMIAR_CRITICO = 0.7;
+
     constructor(canvas, opts = {}) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -37,6 +41,7 @@ class CombateEngine {
         this.aguaMax = fase.agua;
 
         this.focos = [];
+        this.queimados = [];
         this.gotas = [];
         this.vapor = [];
         this.spawnTimer = 0.8;
@@ -157,7 +162,7 @@ class CombateEngine {
 
         // surgimento de focos
         this.spawnTimer -= dt;
-        if (this.spawnTimer <= 0 && this.focos.length < 7) {
+        if (this.spawnTimer <= 0 && this.focos.length < (this.fase.maxFocos || 7)) {
             this.gerarFoco();
             const [a, b] = this.fase.intervalo;
             this.spawnTimer = a + Math.random() * (b - a);
@@ -191,19 +196,44 @@ class CombateEngine {
 
             f.vida = Math.min(1, f.vida + dt * (this.fase.crescimento / 100));
 
-            if (f.vida >= 1 && !f.escapou) {
-                f.escapou = true;
-                this.escaparam++;
-                this.calor = Math.min(1, this.calor + 0.2);
-                this.shake = 0.35;
-                this.som('escapou');
-                this.onAlerta(`🔥 Um foco saiu de controle em ${f.local}!`);
-                if (this.escaparam >= 3) { this.finalizar('perdeu'); return; }
+            // ---- zona crítica: contagem regressiva explícita antes de propagar ----
+            // A vida fica travada no limiar e o que corre é um relógio fixo. Assim
+            // a janela de reação é sempre a mesma, o jogador vê quantos segundos
+            // tem, e a derrota deixa de parecer arbitrária.
+            const janela = this.fase.janela || 7;
+            if (f.vida >= CombateEngine.LIMIAR_CRITICO) {
+                if (!f.critico) {
+                    f.critico = true;
+                    f.restante = janela;
+                    this.som('escapou');
+                    this.onAlerta(`⚠️ ${f.local}: fogo fora de controle! ${janela}s para conter.`);
+                }
+                f.vida = CombateEngine.LIMIAR_CRITICO;   // trava: quem corre agora é o relógio
+                f.restante -= dt;
+
+                if (f.restante <= 0) {
+                    f.espalhou = true;
+                    this.escaparam++;
+                    this.calor = Math.min(1, this.calor + 0.25);
+                    this.shake = 0.5;
+                    this.som('escapou');
+                    this.marcarQueimado(f);
+                    this.onAlerta(`🔥 PROPAGAÇÃO ${this.escaparam} de 3 — o fogo tomou ${f.local}.`);
+                    if (this.escaparam >= 3) { this.finalizar('perdeu'); return; }
+                }
+            } else if (f.critico) {
+                // o jogador conseguiu conter antes do tempo acabar
+                f.critico = false;
+                f.restante = 0;
+                this.pontos += 15;
+                this.onAlerta(`✅ ${f.local} contido a tempo. +15`);
             }
         }
 
-        // a limpeza acontece aqui, no relógio do jogo, e não num setTimeout
-        this.focos = this.focos.filter(f => !(f.extinto && f.apagando <= -0.05));
+        // a limpeza acontece aqui, no relógio do jogo, e não num setTimeout.
+        // O foco que propagou sai de cena: ele já cobrou seu preço e deixar
+        // que continue queimando confundiria a leitura do placar.
+        this.focos = this.focos.filter(f => !f.espalhou && !(f.extinto && f.apagando <= -0.05));
 
         // jato molhando os focos
         if (jatoAtivo) {
@@ -310,6 +340,13 @@ class CombateEngine {
         }
     }
 
+    /* onde o fogo propagou fica uma mancha de queimado: o jogador precisa ver
+       no cenário o preço de ter perdido aquele foco */
+    marcarQueimado(f) {
+        this.queimados = this.queimados || [];
+        this.queimados.push({ x: f.x, y: f.y, r: f.raio * 1.5 });
+    }
+
     criarVapor(x, y) {
         this.vapor.push({
             x: x + (Math.random() - 0.5) * 26,
@@ -350,6 +387,20 @@ class CombateEngine {
         if (this.shake > 0) c.translate((Math.random() - 0.5) * 9, (Math.random() - 0.5) * 9);
 
         this.cenario(c);
+
+        // cicatrizes das propagações já perdidas
+        for (const q of (this.queimados || [])) {
+            c.save();
+            c.globalAlpha = 0.5;
+            c.fillStyle = '#1f2937';
+            c.beginPath(); c.ellipse(q.x, q.y + q.r * 0.35, q.r, q.r * 0.42, 0, 0, Math.PI * 2); c.fill();
+            c.globalAlpha = 0.75;
+            c.font = 'bold 22px Outfit, sans-serif';
+            c.textAlign = 'center';
+            c.fillStyle = '#9ca3af';
+            c.fillText('🚫', q.x, q.y + q.r * 0.5);
+            c.restore();
+        }
 
         for (const f of this.focos) this.desenharFoco(c, f);
 
@@ -595,11 +646,46 @@ class CombateEngine {
 
         // barra de intensidade
         const bw = 56, bh = 6;
+        const topo = f.y - r * 1.72;
         c.globalAlpha = alpha * 0.95;
         c.fillStyle = 'rgba(15,23,42,0.28)';
-        c.fillRect(f.x - bw / 2, f.y - r * 1.72, bw, bh);
-        c.fillStyle = f.vida > 0.75 ? '#dc2626' : f.vida > 0.45 ? '#f59e0b' : '#22c55e';
-        c.fillRect(f.x - bw / 2, f.y - r * 1.72, bw * Math.max(0, Math.min(1, f.vida)), bh);
+        c.fillRect(f.x - bw / 2, topo, bw, bh);
+        c.fillStyle = f.critico ? '#dc2626' : f.vida > 0.45 ? '#f59e0b' : '#22c55e';
+        c.fillRect(f.x - bw / 2, topo, bw * Math.max(0, Math.min(1, f.vida)), bh);
+
+        // marca de onde começa a zona crítica: o jogador vê o limite antes de cruzá-lo
+        c.fillStyle = 'rgba(220,38,38,0.9)';
+        c.fillRect(f.x - bw / 2 + bw * CombateEngine.LIMIAR_CRITICO - 1, topo - 2, 2, bh + 4);
+
+        // aviso de foco fora de controle
+        if (f.critico && !f.extinto) {
+            const janela = (this.fase && this.fase.janela) || 7;
+            const frac = Math.max(0, Math.min(1, (f.restante || 0) / janela));
+            const pulso = 0.5 + Math.abs(Math.sin(t * (5 + (1 - frac) * 9))) * 0.5;
+            const raioAro = r * 1.5;
+
+            // trilho do relógio
+            c.globalAlpha = alpha * 0.28;
+            c.strokeStyle = '#dc2626'; c.lineWidth = 6;
+            c.beginPath(); c.arc(f.x, f.y, raioAro, 0, Math.PI * 2); c.stroke();
+
+            // arco que consome no sentido horário: mostra o tempo que sobra
+            c.globalAlpha = alpha * pulso;
+            c.lineCap = 'round';
+            c.beginPath();
+            c.arc(f.x, f.y, raioAro, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2);
+            c.stroke();
+            c.lineCap = 'butt';
+
+            // segundos restantes
+            c.globalAlpha = alpha;
+            c.textAlign = 'center';
+            c.font = 'bold 15px Outfit, sans-serif';
+            c.fillStyle = '#b91c1c';
+            c.fillText(`⚠️ ${Math.ceil(Math.max(0, f.restante || 0))}s`, f.x, topo - 22);
+            c.font = 'bold 11px Outfit, sans-serif';
+            c.fillText('VAI PROPAGAR', f.x, topo - 9);
+        }
 
         c.restore();
     }

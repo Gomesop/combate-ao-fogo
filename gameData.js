@@ -21,14 +21,16 @@ const FASES = [
         nome: 'Cozinha Residencial',
         subtitulo: 'Princípio de incêndio em panela',
         cenario: 'cozinha',
-        duracao: 45,
-        focosAlvo: 5,          // focos a extinguir para vencer
+        duracao: 75,
+        focosAlvo: 9,          // focos a extinguir para vencer
         intervalo: [2.1, 3.0], // tempo entre surgimentos
         crescimento: 3.4,      // velocidade com que o foco cresce
-        resistencia: 1.00,     // o fogo cede mais devagar a cada fase
+        resistencia: 1.00,
+        janela: 9,           // segundos para conter um foco crítico antes de propagar
+        maxFocos: 6,     // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 11,           // por segundo com o jato aberto
-        recarga: 9,            // por segundo com o jato fechado
+        recarga: 9.0,            // por segundo com o jato fechado
         briefing: 'Óleo superaqueceu na panela. Abra o jato em leque e resfrie a base das chamas.',
         dica: 'Mire na BASE do fogo, não nas labaredas.'
     },
@@ -37,14 +39,16 @@ const FASES = [
         nome: 'Almoxarifado',
         subtitulo: 'Papelão e embalagens em chamas',
         cenario: 'almoxarifado',
-        duracao: 45,
-        focosAlvo: 6,
+        duracao: 80,
+        focosAlvo: 11,
         intervalo: [1.8, 2.5],
         crescimento: 4.0,
-        resistencia: 1.25,   // o fogo cede mais devagar a cada fase
-        agua: 100,
+        resistencia: 1.25,
+        janela: 8,           // segundos para conter um foco crítico antes de propagar
+        maxFocos: 7,   // o fogo cede mais devagar a cada fase
+        agua: 105,
         consumo: 12,
-        recarga: 8.5,
+        recarga: 9.0,
         briefing: 'Material classe A empilhado. O fogo se alastra pelas prateleiras — não deixe nenhum foco crescer.',
         dica: 'Focos pequenos apagam rápido. Não deixe acumular.'
     },
@@ -53,14 +57,16 @@ const FASES = [
         nome: 'Oficina Mecânica',
         subtitulo: 'Solventes e graxa',
         cenario: 'oficina',
-        duracao: 45,
-        focosAlvo: 7,
+        duracao: 85,
+        focosAlvo: 12,
         intervalo: [1.5, 2.1],
         crescimento: 4.6,
-        resistencia: 1.55,   // o fogo cede mais devagar a cada fase
-        agua: 100,
+        resistencia: 1.55,
+        janela: 7,           // segundos para conter um foco crítico antes de propagar
+        maxFocos: 7,   // o fogo cede mais devagar a cada fase
+        agua: 110,
         consumo: 13,
-        recarga: 8,
+        recarga: 9.5,
         briefing: 'Líquidos inflamáveis derramados. Trabalhe da borda para o centro, sem espalhar o produto.',
         dica: 'Jato forte demais espalha líquido inflamável — modere.'
     },
@@ -69,14 +75,16 @@ const FASES = [
         nome: 'Galpão Industrial',
         subtitulo: 'Fardos e paletes',
         cenario: 'galpao',
-        duracao: 45,
-        focosAlvo: 8,
+        duracao: 90,
+        focosAlvo: 13,
         intervalo: [1.2, 1.7],
         crescimento: 4.8,
-        resistencia: 1.80,   // o fogo cede mais devagar a cada fase
-        agua: 100,
+        resistencia: 1.80,
+        janela: 6,           // segundos para conter um foco crítico antes de propagar
+        maxFocos: 8,   // o fogo cede mais devagar a cada fase
+        agua: 120,
         consumo: 13.5,
-        recarga: 7.5,
+        recarga: 10.0,
         briefing: 'Carga alta e ventilação favorecendo a propagação. Priorize os focos maiores.',
         dica: 'A carga é densa: cada foco leva mais tempo de jato para ceder.'
     },
@@ -85,14 +93,16 @@ const FASES = [
         nome: 'Área de Tanques',
         subtitulo: 'Risco de propagação',
         cenario: 'tanques',
-        duracao: 45,
-        focosAlvo: 9,
+        duracao: 95,
+        focosAlvo: 15,
         intervalo: [0.95, 1.30],
         crescimento: 4.6,
-        resistencia: 2.05,   // o fogo cede mais devagar a cada fase
-        agua: 100,
+        resistencia: 2.05,
+        janela: 6,           // segundos para conter um foco crítico antes de propagar
+        maxFocos: 8,   // o fogo cede mais devagar a cada fase
+        agua: 130,
         consumo: 14,
-        recarga: 7,
+        recarga: 10.5,
         briefing: 'Chamas próximas aos tanques. Resfrie tudo antes que o calor comprometa os costados.',
         dica: 'Fogo alimentado por hidrocarboneto resiste muito mais à água. Insista na base.'
     },
@@ -101,14 +111,16 @@ const FASES = [
         nome: 'Unidade de Processo',
         subtitulo: 'Emergência de grande porte',
         cenario: 'processo',
-        duracao: 45,
-        focosAlvo: 10,
+        duracao: 100,
+        focosAlvo: 17,
         intervalo: [0.85, 1.15],
         crescimento: 3.8,
-        resistencia: 2.15,   // o fogo cede mais devagar a cada fase
-        agua: 100,
-        consumo: 14.5,
-        recarga: 6.5,
+        resistencia: 2.15,
+        janela: 5,           // segundos para conter um foco crítico antes de propagar
+        maxFocos: 9,   // o fogo cede mais devagar a cada fase
+        agua: 150,
+        consumo: 13.5,
+        recarga: 13.0,
         briefing: 'Missão final. Vários pontos de ignição simultâneos na unidade. Controle a água e não deixe nada crescer.',
         dica: 'Focos surgem quase sem pausa e cedem devagar. Feche o jato para recarregar.'
     }

@@ -251,7 +251,12 @@ a { color: var(--agua-dark); text-decoration: none; }
 .brief-text { font-size: 0.88rem; color: var(--texto-soft); line-height: 1.6; margin-bottom: 0.8rem; }
 .brief-tip {
     background: var(--fogo-soft); border: 1px solid #ffd0aa; border-radius: 12px;
-    padding: 0.6rem 0.85rem; font-size: 0.82rem; color: #8a4416; line-height: 1.5; margin-bottom: 1.2rem;
+    padding: 0.6rem 0.85rem; font-size: 0.82rem; color: #8a4416; line-height: 1.5; margin-bottom: 0.7rem;
+}
+.brief-regra {
+    background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px;
+    padding: 0.6rem 0.85rem; font-size: 0.79rem; color: #991b1b; line-height: 1.55; margin-bottom: 1.2rem;
+    text-align: left;
 }
 .brief-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1.3rem; }
 .brief-stats > div { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 11px; padding: 0.6rem 0.3rem; }

@@ -165,6 +165,12 @@ class CombateApp {
         document.getElementById('brief-dif').textContent = dif.toFixed(1).replace('.0', '') + 'x';
         document.getElementById('brief-res').textContent =
             (1 / (0.78 / (f.resistencia || 1))).toFixed(1).replace('.', ',') + 's';
+        // a regra da derrota fica escrita, com o número desta fase
+        document.getElementById('brief-regra').innerHTML =
+            `🚨 <strong>Quando o fogo se espalha:</strong> se um foco cruza a marca vermelha da barra, ` +
+            `ele entra em contagem regressiva de <strong>${f.janela || 7} segundos</strong>. ` +
+            `Apague-o antes do zero e ele é contido. Se o tempo acabar, conta uma <strong>propagação</strong> — ` +
+            `com <strong>3 propagações</strong> a fase é perdida.`;
         this.tela('briefing');
     }
 
@@ -198,7 +204,7 @@ class CombateApp {
         this.hudScene.textContent = f.nome;
         this.hudAlvo.textContent = f.focosAlvo;
         this.hudApagados.textContent = '0';
-        this.hudFail.textContent = '🔥 0/3';
+        this.hudFail.textContent = '🔥 Propagações 0/3';
         this.hudFail.classList.remove('alerta');
 
         if (this.engine) this.engine.destruir();
@@ -212,8 +218,8 @@ class CombateApp {
                 this.aguaFill.style.width = `${h.agua}%`;
                 this.aguaFill.classList.toggle('baixa', h.agua < 25);
                 this.focosFill.style.width = `${Math.min(100, (h.apagados / h.alvo) * 100)}%`;
-                this.hudFail.textContent = `🔥 ${h.escaparam}/3`;
-                this.hudFail.classList.toggle('alerta', h.escaparam >= 2);
+                this.hudFail.textContent = `🔥 Propagações ${h.escaparam}/3`;
+                this.hudFail.classList.toggle('alerta', h.escaparam >= 1);
             },
             onApagou: (b) => this.aviso(`💧 Foco apagado +${b}`, 'ok'),
             onAlerta: (m) => this.aviso(m, 'ruim'),
@@ -254,7 +260,7 @@ class CombateApp {
         if (r.motivo === 'perdeu' || r.motivo === 'tempo') {
             this.tocar('derrota');
             const msg = r.motivo === 'perdeu'
-                ? 'Três focos saíram de controle e o incêndio se alastrou.'
+                ? 'Três focos propagaram e o incêndio tomou a área. Contenha cada foco antes de ele cruzar a marca vermelha da barra.'
                 : `O tempo acabou com ${r.apagados} de ${FASES[this.faseIndex].focosAlvo} focos apagados.`;
             setTimeout(() => {
                 if (confirm(`${msg}\n\nDeseja repetir esta fase?`)) this.mostrarBriefing();
