@@ -32,7 +32,8 @@ class CombateApp {
             game:     document.getElementById('screen-game'),
             ad:       document.getElementById('screen-ad'),
             quiz:     document.getElementById('screen-quiz'),
-            end:      document.getElementById('screen-end')
+            end:      document.getElementById('screen-end'),
+            lose:     document.getElementById('screen-lose')
         };
 
         this.regName = document.getElementById('reg-name');
@@ -70,6 +71,8 @@ class CombateApp {
         document.getElementById('btn-start-phase').addEventListener('click', () => this.iniciarFase());
         document.getElementById('btn-skip-ad').addEventListener('click', () => this.depoisDoAnuncio());
         document.getElementById('btn-quiz-next').addEventListener('click', () => this.depoisDoDesafio());
+        document.getElementById('btn-retry-phase').addEventListener('click', () => this.repetirFase());
+        document.getElementById('btn-give-up').addEventListener('click', () => this.desistir());
         document.getElementById('btn-restart').addEventListener('click', () => {
             this.tocar('clique'); this.tela('welcome');
         });
@@ -259,13 +262,7 @@ class CombateApp {
 
         if (r.motivo === 'perdeu' || r.motivo === 'tempo') {
             this.tocar('derrota');
-            const msg = r.motivo === 'perdeu'
-                ? 'Três focos propagaram e o incêndio tomou a área. Contenha cada foco antes de ele cruzar a marca vermelha da barra.'
-                : `O tempo acabou com ${r.apagados} de ${FASES[this.faseIndex].focosAlvo} focos apagados.`;
-            setTimeout(() => {
-                if (confirm(`${msg}\n\nDeseja repetir esta fase?`)) this.mostrarBriefing();
-                else this.finalizar(false);
-            }, 400);
+            this.mostrarDerrota(r);
             return;
         }
 
@@ -274,6 +271,41 @@ class CombateApp {
 
         if (this.faseIndex >= FASES.length - 1) { this.finalizar(true); return; }
         this.mostrarAnuncio();
+    }
+
+    /* ============================================================
+       DERROTA DA FASE — explica exatamente o que aconteceu
+       ============================================================ */
+
+    mostrarDerrota(r) {
+        const f = FASES[this.faseIndex];
+        const porPropagacao = r.motivo === 'perdeu';
+
+        document.getElementById('lose-ico').textContent = porPropagacao ? '🔥' : '⏱️';
+        document.getElementById('lose-title').textContent =
+            porPropagacao ? 'O incêndio se alastrou' : 'Tempo esgotado';
+        document.getElementById('lose-text').innerHTML = porPropagacao
+            ? `Três focos ficaram em contagem regressiva até o fim e <strong>propagaram</strong>. ` +
+              `Quando a barra de um foco cruza a marca vermelha, você tem <strong>${f.janela || 7} segundos</strong> ` +
+              `para apagá-lo — se o contador zerar, conta uma propagação. Três encerram a fase.`
+            : `Os ${f.duracao} segundos acabaram com <strong>${r.apagados} de ${f.focosAlvo}</strong> focos apagados. ` +
+              `Mire na base da chama: lá o jato é cerca de três vezes mais eficaz.`;
+
+        document.getElementById('lose-m1').textContent = `${r.apagados}/${f.focosAlvo}`;
+        document.getElementById('lose-m2').textContent = `${r.escaparam || 0}/3`;
+        document.getElementById('lose-m3').textContent = `${r.precisao || 0}%`;
+
+        this.tela('lose');
+    }
+
+    repetirFase() {
+        this.tocar('clique');
+        this.mostrarBriefing();
+    }
+
+    desistir() {
+        this.tocar('clique');
+        this.finalizar(false);
     }
 
     /* ============================================================
