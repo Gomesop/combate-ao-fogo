@@ -30,9 +30,9 @@ const FASES = [
         maxFocos: 6,
         cargaMaxima: 2.0,     // carga de fogo que zera o medidor de controle
         cargaControlada: 0.55, // carga máxima aceita para dar a área por controlada
-        agua: 100,
-        consumo: 11,           // por segundo com o jato aberto
-        recarga: 9.0,            // por segundo com o jato fechado
+        agua: 170,
+        consumo: 9.5,           // por segundo com o jato aberto
+        recarga: 16.0,            // por segundo com o jato fechado
         briefing: 'Óleo superaqueceu na panela. Abra o jato em leque e resfrie a base das chamas.',
         dica: 'Mire na BASE do fogo, não nas labaredas.'
     },
@@ -50,9 +50,9 @@ const FASES = [
         maxFocos: 7,
         cargaMaxima: 2.4,     // carga de fogo que zera o medidor de controle
         cargaControlada: 0.60, // carga máxima aceita para dar a área por controlada
-        agua: 105,
-        consumo: 12,
-        recarga: 9.0,
+        agua: 175,
+        consumo: 9.8,
+        recarga: 16.0,
         briefing: 'Material classe A empilhado. O fogo se alastra pelas prateleiras — não deixe nenhum foco crescer.',
         dica: 'Focos pequenos apagam rápido. Não deixe acumular.'
     },
@@ -70,9 +70,9 @@ const FASES = [
         maxFocos: 7,
         cargaMaxima: 2.8,     // carga de fogo que zera o medidor de controle
         cargaControlada: 0.65, // carga máxima aceita para dar a área por controlada
-        agua: 110,
-        consumo: 13,
-        recarga: 9.5,
+        agua: 180,
+        consumo: 10.2,
+        recarga: 16.5,
         briefing: 'Líquidos inflamáveis derramados. Trabalhe da borda para o centro, sem espalhar o produto.',
         dica: 'Jato forte demais espalha líquido inflamável — modere.'
     },
@@ -83,16 +83,16 @@ const FASES = [
         cenario: 'galpao',
         duracao: 90,
         focosAlvo: 13,
-        intervalo: [1.2, 1.7],
+        intervalo: [1.10, 1.50],
         crescimento: 4.8,
-        resistencia: 1.80,     // o fogo cede mais devagar a cada fase
+        resistencia: 1.85,     // o fogo cede mais devagar a cada fase
         janela: 6,           // segundos para conter um foco crítico antes de propagar
         maxFocos: 8,
         cargaMaxima: 3.2,     // carga de fogo que zera o medidor de controle
-        cargaControlada: 0.70, // carga máxima aceita para dar a área por controlada
-        agua: 120,
-        consumo: 13.5,
-        recarga: 10.0,
+        cargaControlada: 0.80, // carga máxima aceita para dar a área por controlada
+        agua: 190,
+        consumo: 10.6,
+        recarga: 17.0,
         briefing: 'Carga alta e ventilação favorecendo a propagação. Priorize os focos maiores.',
         dica: 'A carga é densa: cada foco leva mais tempo de jato para ceder.'
     },
@@ -103,16 +103,16 @@ const FASES = [
         cenario: 'tanques',
         duracao: 95,
         focosAlvo: 15,
-        intervalo: [0.95, 1.30],
+        intervalo: [0.98, 1.32],
         crescimento: 4.6,
         resistencia: 2.05,     // o fogo cede mais devagar a cada fase
         janela: 6,           // segundos para conter um foco crítico antes de propagar
         maxFocos: 8,
         cargaMaxima: 3.6,     // carga de fogo que zera o medidor de controle
-        cargaControlada: 0.75, // carga máxima aceita para dar a área por controlada
-        agua: 130,
-        consumo: 14,
-        recarga: 10.5,
+        cargaControlada: 0.85, // carga máxima aceita para dar a área por controlada
+        agua: 200,
+        consumo: 11.0,
+        recarga: 17.5,
         briefing: 'Chamas próximas aos tanques. Resfrie tudo antes que o calor comprometa os costados.',
         dica: 'Fogo alimentado por hidrocarboneto resiste muito mais à água. Insista na base.'
     },
@@ -123,16 +123,16 @@ const FASES = [
         cenario: 'processo',
         duracao: 100,
         focosAlvo: 15,
-        intervalo: [0.85, 1.15],
+        intervalo: [0.92, 1.24],
         crescimento: 3.8,
-        resistencia: 2.15,     // o fogo cede mais devagar a cada fase
+        resistencia: 2.25,     // o fogo cede mais devagar a cada fase
         janela: 5,           // segundos para conter um foco crítico antes de propagar
         maxFocos: 9,
         cargaMaxima: 4.8,     // carga de fogo que zera o medidor de controle
-        cargaControlada: 0.80, // carga máxima aceita para dar a área por controlada
-        agua: 150,
-        consumo: 13.5,
-        recarga: 13.0,
+        cargaControlada: 1.00, // carga máxima aceita para dar a área por controlada
+        agua: 215,
+        consumo: 11.5,
+        recarga: 18.0,
         briefing: 'Missão final. Vários pontos de ignição simultâneos na unidade. Controle a água e não deixe nada crescer.',
         dica: 'Focos surgem quase sem pausa e cedem devagar. Feche o jato para recarregar.'
     }
