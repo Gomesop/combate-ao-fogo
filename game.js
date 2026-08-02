@@ -157,8 +157,14 @@ class CombateApp {
         document.getElementById('brief-tip').innerHTML = `💡 <strong>Dica:</strong> ${f.dica}`;
         document.getElementById('brief-alvo').textContent = f.focosAlvo;
         document.getElementById('brief-dur').textContent = f.duracao;
-        document.getElementById('brief-dif').textContent =
-            (f.crescimento / FASES[0].crescimento).toFixed(1).replace('.0', '') + 'x';
+        // a intensidade combina o quanto o fogo resiste com a frequência dos
+        // surgimentos: só o crescimento não descreve mais a curva das fases
+        const media = (x) => (x.intervalo[0] + x.intervalo[1]) / 2;
+        const base = FASES[0];
+        const dif = ((f.resistencia || 1) / (base.resistencia || 1)) * (media(base) / media(f));
+        document.getElementById('brief-dif').textContent = dif.toFixed(1).replace('.0', '') + 'x';
+        document.getElementById('brief-res').textContent =
+            (1 / (0.78 / (f.resistencia || 1))).toFixed(1).replace('.', ',') + 's';
         this.tela('briefing');
     }
 

@@ -23,8 +23,9 @@ const FASES = [
         cenario: 'cozinha',
         duracao: 45,
         focosAlvo: 5,          // focos a extinguir para vencer
-        intervalo: [2.2, 3.2], // tempo entre surgimentos
+        intervalo: [2.1, 3.0], // tempo entre surgimentos
         crescimento: 3.4,      // velocidade com que o foco cresce
+        resistencia: 1.00,     // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 11,           // por segundo com o jato aberto
         recarga: 9,            // por segundo com o jato fechado
@@ -38,8 +39,9 @@ const FASES = [
         cenario: 'almoxarifado',
         duracao: 45,
         focosAlvo: 6,
-        intervalo: [1.9, 2.8],
+        intervalo: [1.8, 2.5],
         crescimento: 4.0,
+        resistencia: 1.25,   // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 12,
         recarga: 8.5,
@@ -53,8 +55,9 @@ const FASES = [
         cenario: 'oficina',
         duracao: 45,
         focosAlvo: 7,
-        intervalo: [1.7, 2.5],
+        intervalo: [1.5, 2.1],
         crescimento: 4.6,
+        resistencia: 1.55,   // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 13,
         recarga: 8,
@@ -68,13 +71,14 @@ const FASES = [
         cenario: 'galpao',
         duracao: 45,
         focosAlvo: 8,
-        intervalo: [1.5, 2.2],
-        crescimento: 4.9,
+        intervalo: [1.2, 1.7],
+        crescimento: 4.8,
+        resistencia: 1.80,   // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 13.5,
         recarga: 7.5,
         briefing: 'Carga alta e ventilação favorecendo a propagação. Priorize os focos maiores.',
-        dica: 'Priorize o foco que está prestes a estourar.'
+        dica: 'A carga é densa: cada foco leva mais tempo de jato para ceder.'
     },
     {
         n: 5,
@@ -83,13 +87,14 @@ const FASES = [
         cenario: 'tanques',
         duracao: 45,
         focosAlvo: 9,
-        intervalo: [1.3, 2.0],
-        crescimento: 5.2,
+        intervalo: [0.95, 1.30],
+        crescimento: 4.6,
+        resistencia: 2.05,   // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 14,
         recarga: 7,
         briefing: 'Chamas próximas aos tanques. Resfrie tudo antes que o calor comprometa os costados.',
-        dica: 'A água aqui também serve para resfriar o entorno.'
+        dica: 'Fogo alimentado por hidrocarboneto resiste muito mais à água. Insista na base.'
     },
     {
         n: 6,
@@ -98,13 +103,14 @@ const FASES = [
         cenario: 'processo',
         duracao: 45,
         focosAlvo: 10,
-        intervalo: [1.0, 1.5],
-        crescimento: 5.4,
+        intervalo: [0.85, 1.15],
+        crescimento: 3.8,
+        resistencia: 2.15,   // o fogo cede mais devagar a cada fase
         agua: 100,
         consumo: 14.5,
         recarga: 6.5,
         briefing: 'Missão final. Vários pontos de ignição simultâneos na unidade. Controle a água e não deixe nada crescer.',
-        dica: 'Feche o jato para recarregar. Sem água, o fogo vence.'
+        dica: 'Focos surgem quase sem pausa e cedem devagar. Feche o jato para recarregar.'
     }
 ];
 

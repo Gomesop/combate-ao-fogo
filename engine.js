@@ -219,7 +219,9 @@ class CombateEngine {
                     // atingir a BASE do foco é muito mais eficiente que molhar as labaredas
                     const naBase = this.mira.y > f.y + f.raio * 0.1;
                     const eficiencia = naBase ? 1 : 0.3;
-                    f.vida = Math.max(0, f.vida - dt * 0.78 * eficiencia);
+                    // resistencia > 1 faz o foco demorar mais para ceder
+                    const res = this.fase.resistencia || 1;
+                    f.vida = Math.max(0, f.vida - dt * (0.78 / res) * eficiencia);
                     f.molhado = 0.25;
                     if (Math.random() < 0.6) this.criarVapor(f.x, f.y + f.raio * 0.3);
                     if (f.vida <= 0) this.extinguir(f, naBase);
