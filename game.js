@@ -375,12 +375,14 @@ class CombateApp {
         cta.href = a.url;
         cta.target = '_blank';
         cta.rel = 'noopener noreferrer';
+        this.abrirEmAbaNova(cta);
 
         const nota = document.getElementById('ad-demo-note');
         if (a.demonstracao) {
             nota.innerHTML = 'Marca fictícia, usada só para demonstrar este espaço. ' +
                 '<a href="anuncie.html" target="_blank" rel="noopener noreferrer">Quer anunciar aqui?</a>';
             nota.classList.remove('hidden');
+            this.abrirEmAbaNova(nota.querySelector('a'));
         } else {
             nota.classList.add('hidden');
         }
@@ -401,6 +403,25 @@ class CombateApp {
         }, 1000);
 
         this.tela('ad');
+    }
+
+    /* Abre o link em aba nova por window.open. Isso importa: uma aba criada por
+       target="_blank" NÃO pode se fechar sozinha (o navegador bloqueia
+       window.close), e o "voltar ao jogo" de lá acabava recarregando o index e
+       recomeçando a partida. Aberta por script, a aba consegue se fechar.
+       Só vale para páginas do próprio site — link de terceiro segue com
+       noopener, sem dar acesso à janela do jogo. */
+    abrirEmAbaNova(el) {
+        if (!el || el._aberturaLigada) return;
+        el._aberturaLigada = true;
+        el.addEventListener('click', (ev) => {
+            const url = el.getAttribute('href') || '';
+            const externo = /^https?:\/\//i.test(url) && !url.startsWith(location.origin);
+            if (externo) return;                  // deixa o target="_blank" agir
+            ev.preventDefault();
+            const w = window.open(url, '_blank');  // sem noopener: a aba precisa do opener para se fechar
+            if (!w) window.open(url, '_blank', 'noopener');   // popup bloqueado: tenta do jeito comum
+        });
     }
 
     depoisDoAnuncio() {
